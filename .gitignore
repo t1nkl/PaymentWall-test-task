@@ -1,0 +1,4 @@
+/vendor
+/README.md
+composer.lock
+.phpunit.result.cache

@@ -1,0 +1,40 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    #
+    # Redirect Trailing Slashes If Not A Folder...
+    #
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    #
+    # Redirect index.php
+    #
+    RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
+    RewriteRule (.*?).index\.php/*(.*) /$1$2 [R=301,NE,L]
+
+    #
+    # Block <script>, PHP Globals and _REQUEST changes
+    #
+    RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+    RewriteRule ^(.*)$ index.php [F,L]
+
+    #
+    # Block all PHP files, except index
+    #
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_FILENAME} \.php$
+    RewriteRule !^index.php index.php [L,NC]
+
+    #
+    # Black listed folders
+    #
+    RewriteRule ^app/.* index.php [L,NC]
+    RewriteRule ^bootstrap/.* index.php [L,NC]
+    RewriteRule ^config/.* index.php [L,NC]
+    RewriteRule ^facades/.* index.php [L,NC]
+    RewriteRule ^vendor/.* index.php [L,NC]
+</IfModule>
